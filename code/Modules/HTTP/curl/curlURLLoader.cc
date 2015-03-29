@@ -159,6 +159,8 @@ curlURLLoader::doOneRequest(const Ptr<HTTPProtocol::HTTPRequest>& req) {
     if (url.HasPort()) {
         uint16 port = StringConverter::FromString<uint16>(url.Port());
         curl_easy_setopt(this->curlSession, CURLOPT_PORT, port);
+    } else {
+        curl_easy_setopt(this->curlSession, CURLOPT_PORT, 80);
     }
 
     // set the HTTP method
