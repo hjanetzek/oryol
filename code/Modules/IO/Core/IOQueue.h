@@ -40,11 +40,13 @@ public:
     bool IsStarted() const;
     
     /// add a file load request to the queue
-    void Add(const URL& url, SuccessFunc onSuccess, FailFunc onFail=FailFunc());
+    uint64 Add(const URL& url, SuccessFunc onSuccess, FailFunc onFail=FailFunc());
     /// add a file group request to the queue
     void AddGroup(const Array<URL>& urls, GroupSuccessFunc onSuccess, FailFunc onFail=FailFunc());
     /// return true if queue is empty
     bool Empty() const;
+
+    void Cancel(uint64 id);
     
 private:
     /// update the queue, called per frame from runloop
@@ -58,6 +60,7 @@ private:
         FailFunc failFunc;
     };
     Array<item> items;
+    int64 serial;
     struct groupItem {
         Array<Ptr<IOProtocol::Request>> ioRequests;
         GroupSuccessFunc successFunc;

@@ -12,7 +12,8 @@ namespace Oryol {
 //------------------------------------------------------------------------------
 IOQueue::IOQueue() :
 isStarted(false),
-runLoopId(RunLoop::InvalidId) {
+runLoopId(RunLoop::InvalidId),
+serial(0) {
     // empty
 }
 
@@ -56,17 +57,29 @@ IOQueue::Empty() const {
 }
 
 //------------------------------------------------------------------------------
-void
+uint64
 IOQueue::Add(const URL& url, SuccessFunc onSuccess, FailFunc onFail) {
     o_assert_dbg(onSuccess);
 
     // create IO request and push into IO facade
     Ptr<IOProtocol::Request> ioReq = IOProtocol::Request::Create();
     ioReq->SetURL(url);
+    ioReq->SetSerialId(++this->serial);
     IO::Put(ioReq);
     
     // add to our queue if pending requests
     this->items.Add(item{ ioReq, onSuccess, onFail });
+
+    return this->serial;
+}
+
+void
+IOQueue::Cancel(uint64 id){
+    for (int32 i = this->items.Size() - 1; i >= 0; --i){
+        const auto& cur = this->items[i];
+        if (cur.ioRequest->GetSerialId() == id)
+            cur.ioRequest->SetCancelled();
+    }
 }
 
 //------------------------------------------------------------------------------

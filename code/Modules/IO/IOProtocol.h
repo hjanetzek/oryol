@@ -59,6 +59,7 @@ public:
     public:
         Request() {
             this->msgId = MessageId::RequestId;
+            this->serialid = 0;
             this->lane = 0;
             this->cachereadenabled = true;
             this->cachewriteenabled = true;
@@ -76,6 +77,12 @@ public:
         virtual bool IsMemberOf(ProtocolIdType protId) const override {
             if (protId == 'IOPT') return true;
             else return Message::IsMemberOf(protId);
+        };
+        void SetSerialId(uint64 val) {
+            this->serialid = val;
+        };
+        uint64 GetSerialId() const {
+            return this->serialid;
         };
         void SetURL(const URL& val) {
             this->url = val;
@@ -138,6 +145,7 @@ public:
             return this->actuallane;
         };
 private:
+        uint64 serialid;
         URL url;
         int32 lane;
         bool cachereadenabled;

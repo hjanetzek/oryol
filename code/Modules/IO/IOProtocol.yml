@@ -10,6 +10,7 @@ headers:
 messages:
     - name: Request
       attrs:
+        - { name: SerialId, type: uint64 }
         - { name: URL, type: URL }
         - { name: Lane, type: int32 }
         - { name: CacheReadEnabled, type: bool, default: 'true' }
