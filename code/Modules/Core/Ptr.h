@@ -163,7 +163,7 @@ public:
         return p;
     };
 
-    T* p;
+    mutable T* p;
 
 private:
     /// delete content

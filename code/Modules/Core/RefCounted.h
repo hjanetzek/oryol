@@ -27,21 +27,21 @@ public:
     /// get reference count
     int32 GetRefCount() const;
     /// add reference
-    void addRef();
+    void addRef() const;
     /// release reference (calls destructor when ref_count reaches zero)
-    void release();
+    void release() const;
 
 private:
     #if ORYOL_HAS_ATOMIC
-    std::atomic<int32> refCount{0};
+    mutable std::atomic<int32> refCount{0};
     #else
-    int32 refCount{0};
+    mutable int32 refCount{0};
     #endif
 };
 
 //------------------------------------------------------------------------------
 inline void
-RefCounted::addRef() {
+RefCounted::addRef() const {
     #if ORYOL_HAS_ATOMIC
     this->refCount.fetch_add(1, std::memory_order_relaxed);
     #else
@@ -51,14 +51,14 @@ RefCounted::addRef() {
 
 //------------------------------------------------------------------------------
 inline void
-RefCounted::release() {
+RefCounted::release() const {
     #if ORYOL_HAS_ATOMIC
     if (1 == this->refCount.fetch_sub(1, std::memory_order_relaxed)) {
     #else
     if (1 == this->refCount--) {
     #endif
         // destroy() is virtual and provided by the OryolClassDecl macro
-        this->destroy();
+        const_cast<RefCounted*>(this)->destroy();
     }
 }
 
