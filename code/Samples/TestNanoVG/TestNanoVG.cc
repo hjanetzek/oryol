@@ -63,11 +63,11 @@ NanoVGApp::OnInit() {
     ioSetup.Assigns.Add("res:", ORYOL_SAMPLE_URL);
     IO::Setup(ioSetup);
     
-    auto gfxSetup = GfxSetup::WindowMSAA4(1024, 600, "Oryol NanoVG Sample");
+    auto gfxSetup = GfxSetup::Window(1024, 600, "Oryol NanoVG Sample");
     Gfx::Setup(gfxSetup);
     Input::Setup();
     NanoVG::Setup();
-    this->ctx = NanoVG::CreateContext(0); // this doubles draw calls: NVG_STENCIL_STROKES | NVG_ANTIALIAS);
+    this->ctx = NanoVG::CreateContext(NVG_STENCIL_STROKES | NVG_ANTIALIAS); // this doubles draw calls: NVG_STENCIL_STROKES | NVG_ANTIALIAS);
     
     // start loading assets asynchronously
     this->ioQueue.Start();

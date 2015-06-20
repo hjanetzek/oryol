@@ -87,6 +87,7 @@ enum NVGimageFlagsGL {
 
 int nvglCreateImageFromHandle(NVGcontext* ctx, GLuint textureId, int w, int h, int flags);
 GLuint nvglImageHandle(NVGcontext* ctx, int image);
+void nvglForgetImageHandle(NVGcontext* ctx, int image);
 
 
 #ifdef __cplusplus
@@ -1461,6 +1462,13 @@ GLuint nvglImageHandle(NVGcontext* ctx, int image)
 	GLNVGcontext* gl = (GLNVGcontext*)nvgInternalParams(ctx)->userPtr;
 	GLNVGtexture* tex = glnvg__findTexture(gl, image);
 	return tex->tex;
+}
+
+void nvglForgetImageHandle(NVGcontext* ctx, int image)
+{
+	GLNVGcontext* gl = (GLNVGcontext*)nvgInternalParams(ctx)->userPtr;
+	GLNVGtexture* tex = glnvg__findTexture(gl, image);
+        tex->tex = 0;
 }
 
 #endif /* NANOVG_GL_IMPLEMENTATION */
